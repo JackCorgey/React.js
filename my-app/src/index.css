@@ -1,0 +1,85 @@
+body {
+	margin: 0;
+  	padding: 0;
+  	font-family: sans-serif;
+  	background-color: rgba(59,54,51, 0.01)
+}
+
+#root {
+	text-align: center;
+}
+
+#board {
+	margin-top: 20%;
+}
+
+.container {
+	position: relative;
+	display: inline-block;
+}
+
+.row {
+	position: relative;
+	display: inline-block;
+	clear: both;
+}
+
+.Led {
+	position: relative;
+	width: 20px;
+	height: 20px;
+	margin: 1px;
+	//border-radius: 50%;
+	box-shadow: 1px 1px rgba(0, 0, 0, 0.27);
+}
+
+
+.Led::before {
+	content: "";
+	position: absolute;
+	z-index: 10000;
+	display: block;
+	height: 1px;
+	width: 100%;
+	top: 0;
+	background-color: rgba(255, 255, 255, 0.4);
+}
+
+.Led::after {
+	content: "";
+	position: absolute;
+	z-index: 10000;
+	display: block;
+	height: 2px;
+	width: 100%;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.off {
+	background-color: rgba(200, 200, 200, 1) !important;
+}
+
+.toolbox {
+	position: absolute;
+	padding-left: 10px;
+}
+
+.toolbox span {
+	display: inline-block;
+	width: 10px;
+}
+
+.toolbox input {
+	width: 50px;
+	margin-left: 10px; 
+}
+
+.color-palette {
+	margin-top: 4px;
+    height: 10px;
+}
+
+
+
+
