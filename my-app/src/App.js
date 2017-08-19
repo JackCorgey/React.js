@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+// import Auth from './Auth/Auth.js';
+// const auth = new Auth();
+// auth.login();
 
 
 
@@ -13,18 +17,91 @@ class App extends Component {
       color: 'rgba(200,200,200,1)'
     }
     this.handleColorChange = this.handleColorChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleColorChange(obj) {
     this.setState({color: obj});
   }
+
+  componentDidMount() {
+    console.log('sdf');
+      fetch('http://localhost:3001/').then( (response) => {
+        console.log(response);
+          return response.json();
+      }).then( (data) => {
+        console.log(data);
+      }).catch( (err) => {
+        console.log('sdf');
+      });
+  }
+  
+  bundle() {
+    var bundle = {
+      leds: []
+    };
+    return {
+      add: function(obj) {
+        bundle.leds.push(obj);
+      },
+      send: function() {
+        return bundle;
+      },
+      clear: function() {
+        bundle = [];
+      },
+      test: function() {
+        var test = {r:'er',b:'asdf'}
+        return test;
+      }
+    }
+  }
+
+  convertValue(color) {
+    color = color.replace(/[a-zA-Z\(\)]/g, '')
+            .split(',');
+
+    var rgba = [];
+    rgba.push(color[0]);
+    rgba.push(color[1]);
+    rgba.push(color[2]);
+    // rgba['g'] = color[1];
+    // rgba['b'] = color[2];
+    //rgba['a'] = color[3];
+
+    return rgba;
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+
+    var bundle = this.bundle();
+    var leds = document.getElementsByClassName('led-input');
+
+    for(var i=0; i<leds.length; ++i) {
+      bundle.add( this.convertValue(leds[i].value) );
+    }
+
+    axios.post('http://localhost:3001/x/8/y/8/', bundle.send())
+      .then( (data) => {
+        bundle.clear();
+        console.log(data);
+          //this.setState({items: data.items});
+      }).catch( (err) => {
+        console.log('sdf');
+      });
+
+  }
+
+
   
   render() {
     return (
       <div id="board">
-        <div className="LedMatrix container">
+        <form id="led-form" className="LedMatrix container">
           {this.renderMatrix()}
-        </div>
+          <input onClick={this.handleSubmit} id="matrix-submit" type='submit' value="Send" />
+        </form>
         <Toolbox onColorChange={this.handleColorChange}/>
       </div>
     )
@@ -88,6 +165,7 @@ class Led extends Component {
       <div className="LedWrapper">
         <div onClick={this.toggle} onContextMenu={this.toggle} style={this.style()} className={"Led col " + this.toggleState()} data-index={this.props.n}>     
         </div>
+        <input className="led-input" type='hidden' value={this.state.color}/>
       </div>
     )
   }
